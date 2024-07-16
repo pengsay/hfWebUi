@@ -9,7 +9,7 @@ import extra_streamlit_components as stx
 import json
 from OpenAI_GPT import OAI_GPT
 from OpenAI_DallE import OAI_DallE
-
+from util.ladp import Ldap_Connector
 from OpenAI_GPT_WUI import OAI_GPT_WUI
 from OpenAI_DallE_WUI import OAI_DallE_WUI
 
@@ -80,6 +80,7 @@ def check_password():
 
 #####
 def main():
+
     # Load all supported models (need the status field to decide or prompt if we can use that model or not)
     av_gpt_models, av_dalle_models = load_models()    
 
@@ -167,23 +168,25 @@ def main():
         username = st.session_state['username']
     
     if cf.isBlank(username):
-        st.image("./assets/Infotrend_Logo.png", width=600)
-        with open("./userinfo.json","r") as f:
-            user_info = json.load(f)
-        username = st.text_input("Enter a username (unauthorized characters will be replaced by _)")
+        st.image("./assets/hfchat.png", width=300)
+
+        username = st.text_input("Enter a username")
         password = st.text_input("Enter password", type="password")
-        if st.button("Save username"):
+        if st.button("login"):
+            print('HOST',os.environ.get('HOST'))
+            print('PORT',os.environ.get('PORT'))
+            print('LDAP_SSL',os.environ.get('LDAP_SSL'))
+            print('BASE_DN',os.environ.get('BASE_DN'))
             # replace non alphanumeric by _
             username = re.sub('[^0-9a-zA-Z]+', '_', username)
             if cf.isBlank(username):
                 st.error(f"Username cannot be empty")
-            elif user_info.get(username) is None:
-                st.error(f"Username {username} not exists!")
-            elif user_info.get(username).get("password") != password:
-                st.error(f"Password is incorrect!")
+            elif Ldap_Connector(username, password).auth() == False:
+                st.error(f"Username or password incorrect")
             else:
                 st.session_state['username'] = username
                 st.rerun()
+     
     else:
         cf.make_wdir_error(os.path.join(save_location))
         long_save_location = os.path.join(save_location, iti_version)
