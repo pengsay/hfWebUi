@@ -54,7 +54,7 @@ class OAI_DallE_WUI:
     def set_ui(self):
         st.sidebar.empty()
         with st.sidebar:
-            st.text("Welcomt to HFChat", help=f"")
+            st.text("Check the various ? for help", help=f"[Run Details]\n\nRunID: {cfw.get_runid()}\n\nSave location: {self.save_location}\n\nUTC time: {cf.get_timeUTC()}\n")
             mode = list(self.dalle_modes.keys())[0]
             if len(self.dalle_modes.keys()) > 1:
                 mode = st.selectbox("mode", options=list(self.dalle_modes.keys()), index=0, key="dalle_mode", help=self.dalle_help)

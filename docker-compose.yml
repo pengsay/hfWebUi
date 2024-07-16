@@ -1,0 +1,26 @@
+services:
+  openai_webui:
+    image: infotrend/openai_webui:latest
+    container_name: openai_webui
+    restart: unless-stopped
+    volumes:
+      - ./savedir:/iti
+      - ./app:/app
+      # Uncomment the following and create a secrets.toml in the directory where this compose.yaml file is to password protect access to the application
+      # - ./secrets.toml:/app/.streamlit/secrets.toml:ro
+    ports:
+      # host port:container port
+      - 8501:8501
+    env_file:
+      - .env
+    # environment:
+    #   - OPENAI_API_KEY=${OPENAI_API_KEY}
+    #   - OAIWUI_SAVEDIR=/iti
+    #   # Adapt the following as best suits your deployment
+    #   - OAIWUI_GPT_ONLY=False
+    #   - OAIWUI_GPT_MODELS=gpt-4o
+    #   - OAIWUI_GPT_VISION=True
+    #   # Even if OAIWUI_GPT_ONLY is True, please set a model, it will be ignored
+    #   - OAIWUI_DALLE_MODELS=dall-e-3
+    #   # Uncomment and enter a value if you are using a single user deployment
+    #   # - OAIWUI_USERNAME=user
