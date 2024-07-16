@@ -1,0 +1,11 @@
+__off
+__pycache__
+venv
+.env
+savedir
+.env.docker
+*.svg
+.streamlit/secrets.toml
+history
+LICENSE
+userinfo.json
